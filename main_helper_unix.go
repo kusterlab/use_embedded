@@ -11,10 +11,10 @@ import (
 func openURL(url string) error {
 	switch runtime.GOOS {
 	case "darwin":
-		return exec.Command("open", url).Run()
+		return exec.Command("open", url).Run() // #nosec
 
 	default:
-		cmd := exec.Command("xdg-open", url)
+		cmd := exec.Command("xdg-open", url) // #nosec
 		cmd.SysProcAttr = &syscall.SysProcAttr{
 			Setpgid: true,
 		}

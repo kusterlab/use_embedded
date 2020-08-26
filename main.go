@@ -1,5 +1,5 @@
 //go:generate statik -src=./isv -include=*.jpg,*.txt,*.html,*.css,*.js
-//go:generate goversioninfo -icon=resources/icon.ico -gofile=./resources/versioninfo.json
+//go:generate goversioninfo -icon=resources/icon.ico
 
 package main
 
@@ -8,29 +8,36 @@ import (
 	"github.com/rakyll/statik/fs"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/pflag"
+	_ "isv_embed/statik" // TODO: Replace with the absolute import path
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
-
-	_ "isv_embed/statik" // TODO: Replace with the absolute import path
 )
 
 // ...
 
 func main() {
 
-	pflag.Int("flagname", 1234, "help message for flagname")
+	var port *int = pflag.Int("port", 8081, "port used for local deployment")
+	var verbose *bool = pflag.BoolP("verbose", "v", false, "verbose output")
+
+	var port_string string = ":" + strconv.FormatInt(int64(*port), 10)
 
 	pflag.Parse()
 	// viper.BindPFlags(pflag.CommandLine)
 
 	logger := logrus.New()
-	logger.Level = logrus.InfoLevel
-	logger.Formatter = &logrus.JSONFormatter{}
+	if *verbose {
+		logger.Level = logrus.InfoLevel
+	} else {
+		logger.Level = logrus.PanicLevel
+	}
+	//	logger.Formatter = &logrus.JSONFormatter{}
 
 	l := logrusmiddleware.Middleware{
-		Name:   "example",
+		Name:   "isv",
 		Logger: logger,
 	}
 
@@ -46,9 +53,9 @@ func main() {
 	http.Handle("/isv/", l.Handler(http.StripPrefix("/isv/", http.FileServer(statikFS)), "isv"))
 	logger.Info("test")
 
-	go http.ListenAndServe(":8081", nil)
-	const url = "http://localhost:8081/isv/PeptideAnnotator.html"
-	openURL(url)
+	go http.ListenAndServe(port_string, nil)
+	url := "http://localhost" + port_string + "/isv/PeptideAnnotator.html"
+	_ = openURL(url)
 	sigs := make(chan os.Signal, 1)
 	done := make(chan bool, 1)
 

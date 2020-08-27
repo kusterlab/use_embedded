@@ -1,5 +1,5 @@
 //go:generate statik -src=./isv -include=*.jpg,*.txt,*.html,*.css,*.js
-//go:generate goversioninfo -icon=resources/icon.ico
+//go:generate goversioninfo -icon=resources/kusterlab.ico
 
 package main
 

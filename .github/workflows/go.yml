@@ -1,0 +1,52 @@
+name: Go
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: submodules!
+      uses: srt32/git-actions@v0.0.3
+      with:
+          args: git submodule update --init --recursive
+
+    - name: Set up Go 1.x
+      uses: actions/setup-go@v2
+      with:
+        go-version: ^1.13
+      id: go
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+
+    - name: Get dependencies
+      run: |
+        go get -v -t -d ./...
+        go get github.com/rakyll/statik
+        go get github.com/josephspurrier/goversioninfo/cmd/goversioninfo
+        go get github.com/securego/gosec/v2/cmd/gosec
+        if [ -f Gopkg.toml ]; then
+            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+            dep ensure
+        fi
+
+    - name: Build
+      run: make build
+
+    - name: Test
+      run: go test -v .
+
+    - name: Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: my-artifact
+        path: builds/
+

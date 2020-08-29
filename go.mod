@@ -1,4 +1,4 @@
-module isv_embed
+module github.com/kusterlab/use_embedded
 
 go 1.12
 

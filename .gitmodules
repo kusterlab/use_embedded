@@ -1,3 +1,3 @@
-[submodule "isv"]
-	path = isv
-	url = git@gitlab.lrz.de:prdb/isv_tools/isv.git
+[submodule "universal_spectrum_explorer"]
+	path = universal_spectrum_explorer
+	url = git@github.com:kusterlab/universal_spectrum_explorer.git

@@ -17,6 +17,7 @@ import (
 	"os/signal"
 	"strconv"
 	"syscall"
+	"time"
 )
 
 func handlerPeptideAtlas(w http.ResponseWriter, req *http.Request) {
@@ -51,7 +52,8 @@ func handlerPeptideAtlas(w http.ResponseWriter, req *http.Request) {
 	for h, val := range req.Header {
 		proxyReq.Header[h] = val
 	}
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: 15 * time.Second}
 	resp, err := client.Do(proxyReq)
 	fmt.Println(resp)
 	if err != nil {

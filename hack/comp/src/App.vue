@@ -39,25 +39,26 @@
 
     <v-main>
 <Button/>
-<Table tableId="1" peptideSequence="DGNVFTTGFSR"/>
-<Table tableId="2" peptideSequence="AEAEAQAEELSFPR"/>
-      <HelloWorld/>
+  <p>{{ $store.state.combinedUrl }}</p>
+  <p>
+   <a v-bind:href= $store.state.combinedUrl target="_blank" >dynamic link to USE </a>
+</p>
+<tabs/>
+<p/>
     </v-main>
   </v-app>
 </template>
 
 <script>
 import Button from './components/Button.vue';
-import HelloWorld from './components/HelloWorld';
-import Table from './components/Table';
+import tabs from './components/2_wayselection_tab';
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld,
     Button,
-Table
+    tabs,
   },
 
   data: () => ({

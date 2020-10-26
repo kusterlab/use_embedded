@@ -7,38 +7,42 @@
           md="4"
         >
           <v-text-field
-            v-model="firstname"
-            :rules="nameRules"
-            :counter="10"
-            label="First name"
-            required
-          ></v-text-field>
+            v-model="title"
+            :rules="rules"
+            counter="25"
+            label="Outlined"
+            outlined
+          >adad</v-text-field>
         </v-col>
-
         <v-col
           cols="12"
           md="4"
         >
-          <v-text-field
-            v-model="lastname"
-            :rules="nameRules"
-            :counter="10"
-            label="Last name"
-            required
-          ></v-text-field>
+    <v-btn
+      class="ma-2"
+      :loading="loading"
+      :disabled="loading"
+      color="secondary"
+      @click="loader = 'loading'"
+    >
+      Load into first table
+    </v-btn>
         </v-col>
-
         <v-col
           cols="12"
           md="4"
         >
-          <v-text-field
-            v-model="email"
-            :rules="emailRules"
-            label="E-mail"
-            required
-          ></v-text-field>
+    <v-btn
+      class="ma-2"
+      :loading="loading"
+      :disabled="loading"
+      color="secondary"
+      @click="loader = 'loading'"
+    >
+      Load into first table
+    </v-btn>
         </v-col>
+
       </v-row>
     </v-container>
   </v-form>
@@ -49,7 +53,7 @@ import axios from 'axios';
   export default {
     data: () => ({
       valid: false,
-      firstname: '',
+      title: 'AEAEAQAEELSFPR',
       lastname: '',
       nameRules: [
         v => !!v || 'Name is required',

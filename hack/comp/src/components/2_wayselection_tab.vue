@@ -1,29 +1,39 @@
 <template>
-<v-card>
-  <v-tabs>
-    <v-tab
-href="#tab-1"
->Item One</v-tab>
-    <v-tab
-href="#tab-2"
->Item Two</v-tab>
-  </v-tabs>
-<v-tabs-items v-model="tab">
+
+  <v-card color="basil">
+
+    <v-tabs
+      v-model="tab"
+      background-color="transparent"
+      color="basil"
+      grow
+    >
+      <v-tab
+        v-for="item in items"
+        :key="item.title"
+      >
+        {{ item.title }}
+      </v-tab>
+    </v-tabs>
+
+    <v-tabs-items v-model="tab">
       <v-tab-item
-        v-for="i in 2"
-        :key="i"
-        :value="'tab-' + i"
->
-<v-card flat>
-<Table/>
-</v-card >
-</v-tab-item>
+        v-for="item in items"
+        :key="item.title"
+      >
+        <v-card
+          color="basil"
+          flat
+        >
+	<Table v-bind:tableId=item.id v-bind:peptideSequence=item.sequence />
+        </v-card>
+      </v-tab-item>
     </v-tabs-items>
-</v-card>
+  </v-card>
 </template>
 
 <script>
-import Table from './Table.vue'
+ import Table from './Table.vue'
 
 
 export default {
@@ -33,6 +43,9 @@ export default {
   data () {
       return {
         tab: null,
+        items: [{'title': 'search1', id: 'use1', sequence:'AEAEAQAEELSFPR'},
+        // {'title': 'search2', id: 'use2', sequence: 'DGNVFTTGFSR'}]
+        {'title': 'search2', id: 'use2', sequence: 'AEAEAQAEELSFPR'}]
 }}
 }
 </script>

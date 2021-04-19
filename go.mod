@@ -1,6 +1,6 @@
 module github.com/kusterlab/use_embedded
 
-go 1.12
+go 1.16
 
 require (
 	github.com/NYTimes/gziphandler v1.1.1

@@ -26,10 +26,10 @@ jobs:
 
     - name: Get dependencies
       run: |
-        go get -v -t -d ./...
         go get github.com/rakyll/statik
         go get github.com/josephspurrier/goversioninfo/cmd/goversioninfo
-        go get github.com/securego/gosec/v2/cmd/gosec
+        go generate ./...
+        go get -v -t -d ./...
         if [ -f Gopkg.toml ]; then
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
             dep ensure

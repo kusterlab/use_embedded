@@ -20,6 +20,8 @@ build_cross: generate
 	@echo "[OK] Windows build was created!"
 	@env GOOS=darwin GOARCH=amd64 go build -ldflags "-extldflags '-static' -X main.GitCommit=$CI_COMMIT_SHA" -o builds/isv_embed_mac
 	@echo "[OK] Mac build was created!"
+	@env GOOS=linux GOARCH=ppc64le go build -ldflags "-extldflags '-static' -X main.GitCommit=$CI_COMMIT_SHA" -o builds/isv_embed_ppc
+	@echo "[OK] Linux(ppc) build was created!"
 
 build: build_cross security
 	@env OOS=linux GOARCH=amd64 go build -ldflags "-extldflags '-static' -X main.GitCommit=$CI_COMMIT_SHA" -o builds/isv_embed 

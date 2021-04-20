@@ -1,4 +1,4 @@
-//go:generate statik -src=./universal_spectrum_explorer  -include=*.jpg,*.txt,*.html,*.css,*.js
+//go:generate statik -src=./universal_spectrum_explorer  -include=*.jpg,*.txt,*.html,*.css,*.js,*png
 //go:generate goversioninfo -icon=resources/kusterlab.ico
 
 package main
@@ -7,11 +7,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/bakins/logrus-middleware"
-	_ "github.com/kusterlab/use_embedded/statik" // TODO: Replace with the absolute import path
-	"github.com/rakyll/statik/fs"
-	"github.com/sirupsen/logrus"
-	"github.com/spf13/pflag"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -19,6 +14,13 @@ import (
 	"strconv"
 	"syscall"
 	"time"
+
+	_ "github.com/kusterlab/use_embedded/statik" // TODO: Replace with the absolute import path
+
+	logrusmiddleware "github.com/bakins/logrus-middleware"
+	"github.com/rakyll/statik/fs"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/pflag"
 )
 
 func handlerPeptideAtlas(w http.ResponseWriter, req *http.Request) {
@@ -220,56 +222,17 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < len(res); i++ {
 		req := <-outputChannel
 		//if req.StatusCode == 200 && req.Origin == "MassIVE"{
-		if req.StatusCode == 200 && req.Origin != "MassIVE"{
+		if req.StatusCode == 200 && req.Origin != "MassIVE" {
 			fmt.Println(req.Origin)
 			w.Header().Set("Content-Type", "application/json")
-			w.Header().Set("Access-Control-Allow-Origin", "*")
+			//			w.Header().Set("Access-Control-Allow-Origin", "*")
 			w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate") // HTTP 1.1.
-			w.Header().Set("Pragma", "no-cache") // HTTP 1.0.
-			w.Header().Set("Expires", "0") // Proxies.
+			w.Header().Set("Pragma", "no-cache")                                   // HTTP 1.0.
+			w.Header().Set("Expires", "0")                                         // Proxies.
 
 			w.Write([]byte(req.Body))
 			return
 
-			/*
-				switch req.Origin {
-			case "ProteomeCentral":
-				fmt.Println(req.Origin)
-				var returnV helper.ProteomeCentral
-				err = json.Unmarshal([]byte(req.Body), &returnV)
-				if err != nil {
-					fmt.Println("internal json parsing issue of ProteomeCentral")
-					http.Error(w, "internal json parsing issue of ProteomeCentral", http.StatusInternalServerError)
-					return
-				}
-				w.Header().Set("Content-Type", "application/json")
-
-				err = json.NewEncoder(w).Encode(returnV[0])
-				if err != nil {
-					fmt.Println("internal json encoding issue of ProteomeCentral")
-					http.Error(w, "internal json encoding issue of ProteomeCentral", http.StatusInternalServerError)
-					return
-				}
-				return
-			case "PeptideAtlas":
-				fmt.Println(req.Origin)
-				var returnV helper.PeptideAtlas
-				err := json.Unmarshal([]byte(req.Body), &returnV)
-				if err != nil {
-					fmt.Println("internal json parsing issue of ProteomeCentral")
-					http.Error(w, "internal json parsing issue of ProteomeCentral", http.StatusInternalServerError)
-					return
-				}
-				w.Header().Set("Content-Type", "application/json")
-				err = json.NewEncoder(w).Encode(returnV[0])
-				if err != nil {
-					fmt.Println("internal json encoding issue of ProteomeCentral")
-					http.Error(w, "internal json encoding issue of ProteomeCentral", http.StatusInternalServerError)
-					return
-				}
-				return
-
-			}*/
 		}
 
 	}

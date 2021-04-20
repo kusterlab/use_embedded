@@ -13,6 +13,8 @@ cp ~/go/bin/goversioninfo /usr/local/bin
 ```
 
 # Build it
+![example branch parameter](https://github.com/kusterlab/use_embedded/actions/workflows/go.yml/badge.svg?branch=master)
+
 the Makefile takes a while because it does a lot of cross-compilation. Disable it to make it much faster!
 ```
 make build 

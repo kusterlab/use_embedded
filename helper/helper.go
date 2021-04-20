@@ -40,3 +40,7 @@ type MassIVE []struct {
 	Intensities []string `json:"intensities"`
 	Mzs         []string `json:"mzs"`
 }
+type CommonDenominator []struct {
+	Intensities []float64 `json:"intensities"`
+	Mzs         []float64 `json:"mzs"`
+}

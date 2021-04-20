@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/bakins/logrus-middleware"
-	"github.com/kusterlab/use_embedded/helper"
 	_ "github.com/kusterlab/use_embedded/statik" // TODO: Replace with the absolute import path
 	"github.com/rakyll/statik/fs"
 	"github.com/sirupsen/logrus"
@@ -221,8 +220,19 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < len(res); i++ {
 		req := <-outputChannel
 		//if req.StatusCode == 200 && req.Origin == "MassIVE"{
-		if req.StatusCode == 200 {
-			switch req.Origin {
+		if req.StatusCode == 200 && req.Origin != "MassIVE"{
+			fmt.Println(req.Origin)
+			w.Header().Set("Content-Type", "application/json")
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate") // HTTP 1.1.
+			w.Header().Set("Pragma", "no-cache") // HTTP 1.0.
+			w.Header().Set("Expires", "0") // Proxies.
+
+			w.Write([]byte(req.Body))
+			return
+
+			/*
+				switch req.Origin {
 			case "ProteomeCentral":
 				fmt.Println(req.Origin)
 				var returnV helper.ProteomeCentral
@@ -258,7 +268,8 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				return
-			}
+
+			}*/
 		}
 
 	}

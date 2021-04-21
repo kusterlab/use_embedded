@@ -46,11 +46,3 @@ jobs:
       with:
         name: my-artifact
         path: builds/
-
-    - name: Release
-      uses: ncipollo/release-action@v1
-      with:
-        artifacts: "builds/*"
-        bodyFile: "body.md"
-        token: ${{ secrets.GITHUB_TOKEN }}
-

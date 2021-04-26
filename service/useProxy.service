@@ -1,0 +1,14 @@
+[Unit]
+    Description=Prometheus Monitoring
+    Wants=network-online.target
+    After=network-online.target
+[Service]
+    User=root
+    Group=root
+    Type=simple
+    ExecStart=/usr/local/bin/useProxy
+    ExecReload=/bin/kill -HUP $MAINPID
+    Restart=on-failure
+    RestartSec=3s
+[Install]
+    WantedBy=multi-user.target

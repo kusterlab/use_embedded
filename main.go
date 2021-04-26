@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"os"
 	"os/signal"
 	"strconv"
@@ -137,19 +138,19 @@ func handlerJPOST(w http.ResponseWriter, req *http.Request) {
 const abc = `
 [{
 	"origin": "JPOST", 
-	"url": "https://repository.jpostdb.org/proxi/spectra?resultType=full&usi="
+	"url": "https://repository.jpostdb.org/proxi/spectra?"
 },{
 	"origin": "MassIVE",
-	"url": "http://massive.ucsd.edu/ProteoSAFe/proxi/v0.1/spectra?resultType=full&usi="
+	"url": "http://massive.ucsd.edu/ProteoSAFe/proxi/v0.1/spectra?"
 },{
 	"origin": "PeptideAtlas",
-	"url" : "http://www.peptideatlas.org/api/proxi/v0.1/spectra?resultType=full&usi="
+	"url" : "http://www.peptideatlas.org/api/proxi/v0.1/spectra?"
 },{
 	"origin": "PRIDE",
-	"url" : "http://wwwdev.ebi.ac.uk/pride/proxi/archive/v0.1/spectra?resultType=full&usi="
+	"url" : "http://wwwdev.ebi.ac.uk/pride/proxi/archive/v0.1/spectra?"
 },{
 	"origin": "ProteomeCentral",
-	"url": "http://proteomecentral.proteomexchange.org/api/proxi/v0.1/spectra?resultType=full&usi="
+	"url": "http://proteomecentral.proteomexchange.org/api/proxi/v0.1/spectra?"
 }]
 `
 
@@ -171,9 +172,12 @@ type RequestResponse struct {
 }
 
 func minimalRequest(endpoint Endpoint, usi string) RequestResponse {
-	url := endpoint.URL + usi
-	fmt.Println(url)
-	proxyReq, err := http.NewRequest("GET", url, nil)
+	params := url.Values{}
+	params.Add("resultType", "full")
+	params.Add("usi", usi)
+	_url := endpoint.URL + params.Encode()
+	fmt.Println(_url)
+	proxyReq, err := http.NewRequest("GET", _url, nil)
 
 	client := &http.Client{}
 	resp, err := client.Do(proxyReq)
@@ -221,8 +225,8 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	for i := 0; i < len(res); i++ {
 		req := <-outputChannel
-		//if req.StatusCode == 200 && req.Origin == "MassIVE"{
-		if req.StatusCode == 200 && req.Origin != "MassIVE" {
+		if req.StatusCode == 200 {
+			// if req.StatusCode == 200 && req.Origin != "MassIVE" {
 			fmt.Println(req.Origin)
 			w.Header().Set("Content-Type", "application/json")
 			//			w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -243,12 +247,12 @@ func availabilityHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
-	var port *int = pflag.Int("port", 8080, "port used for local deployment")
+	var port *int= pflag.Int("port", 8080, "port used for local deployment")
 	var verbose *bool = pflag.BoolP("verbose", "v", false, "verbose output")
 
+	pflag.Parse()
 	var port_string string = ":" + strconv.FormatInt(int64(*port), 10)
 
-	pflag.Parse()
 	// viper.BindPFlags(pflag.CommandLine)
 
 	logger := logrus.New()
@@ -279,6 +283,7 @@ func main() {
 	http.HandleFunc("/availability", availabilityHandler)
 
 	go http.ListenAndServe(port_string, nil)
+	fmt.Println(port_string)
 	url := "http://localhost" + port_string + "/use/UniversalSpectrumExplorer.html"
 	_ = openURL(url)
 	sigs := make(chan os.Signal, 1)

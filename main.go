@@ -147,7 +147,7 @@ const abc = `
 	"url" : "http://www.peptideatlas.org/api/proxi/v0.1/spectra?"
 },{
 	"origin": "PRIDE",
-	"url" : "http://wwwdev.ebi.ac.uk/pride/proxi/archive/v0.1/spectra?"
+	"url" : "http://www.ebi.ac.uk/pride/proxi/archive/v0.1/spectra?"
 },{
 	"origin": "ProteomeCentral",
 	"url": "http://proteomecentral.proteomexchange.org/api/proxi/v0.1/spectra?"
